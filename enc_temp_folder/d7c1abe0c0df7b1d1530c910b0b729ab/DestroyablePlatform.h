@@ -32,7 +32,7 @@ public:
 	FTimerHandle Delay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstance* RedMaterial;
+	UMaterial* RedMaterial;
 
 	UPROPERTY(Transient)
 	class ATimeManager* TimeManager;
