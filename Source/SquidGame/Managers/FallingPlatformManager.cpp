@@ -2,6 +2,8 @@
 
 
 #include "Managers/FallingPlatformManager.h"
+#include "Actors/RoundPlatform.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFallingPlatformManager::AFallingPlatformManager()
@@ -16,6 +18,33 @@ void AFallingPlatformManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AFallingPlatformManager::ChangeStatePlatform, 5.f, true);
+}
+
+void AFallingPlatformManager::ChangeStatePlatform()
+{
+	
+	int RandIndexPlatform = FMath::RandRange(1,4);
+	for (auto Actor : FoundActors)
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARoundPlatform::StaticClass(), FoundActors);
+
+		RoundPlatform = Cast<ARoundPlatform>(Actor);
+		if (RoundPlatform != nullptr)
+		{
+			if (RandIndexPlatform == RoundPlatform->FallingIndex)
+			{
+				RoundPlatform->OnChangeMaterial();
+			}
+		}
+	}
+	
+}
+
+void AFallingPlatformManager::ChangeMaterial()
+{
 }
 
 // Called every frame

@@ -27,3 +27,8 @@ void ARoundPlatform::Tick(float DeltaTime)
 
 }
 
+void ARoundPlatform::OnChangeMaterial()
+{
+	Mesh->SetMaterial(0, RedMaterial);
+}
+

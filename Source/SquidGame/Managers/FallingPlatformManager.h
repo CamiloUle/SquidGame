@@ -15,9 +15,23 @@ public:
 	// Sets default values for this actor's properties
 	AFallingPlatformManager();
 
+	UPROPERTY(Transient)
+	class ARoundPlatform* RoundPlatform;
+
+	UPROPERTY(Transient)
+	TArray<AActor*> FoundActors;
+
+	UPROPERTY(Transient)
+	FTimerHandle TimerHandle;
+
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void ChangeStatePlatform();
+	void ChangeMaterial();
 
 public:	
 	// Called every frame
