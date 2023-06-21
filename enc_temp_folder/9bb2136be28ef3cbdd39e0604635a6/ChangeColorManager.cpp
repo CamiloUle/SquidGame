@@ -2,7 +2,6 @@
 
 
 #include "Managers/ChangeColorManager.h"
-#include "Managers/TimeManager.h"
 #include "Characters/SquidGameCharacter.h"
 #include "Actors/ActorLight.h"
 #include "Actors/YoungHeeActor.h"
@@ -35,7 +34,6 @@ void AChangeColorManager::BeginPlay()
 
 	ActorLight = Cast<AActorLight>(UGameplayStatics::GetActorOfClass(GetWorld(), AActorLight::StaticClass()));
 	YoungHeeActor = Cast<AYoungHeeActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AYoungHeeActor::StaticClass()));
-	TimeManager = Cast<ATimeManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ATimeManager::StaticClass()));
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASquidGameCharacter::StaticClass(), FoundCharacters);
 
@@ -97,12 +95,12 @@ void AChangeColorManager::KillCharacter()
 			CharacterRightPosition->OnKillCharacter();
 		}
 
-		if (GameState && TimeManager)
+		if (GameState)
 		{
 			if (CharacterRightPosition->bIsCharacterDead && CharacterLeftPosition->bIsCharacterDead)
 			{
 				GameState->OnEndSceneGame();
-				TimeManager->Timer = 0;
+				
 			}
 		}
 	}

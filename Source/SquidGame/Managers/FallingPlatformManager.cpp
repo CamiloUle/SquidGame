@@ -25,7 +25,6 @@ void AFallingPlatformManager::BeginPlay()
 
 void AFallingPlatformManager::ChangeStatePlatform()
 {
-	
 	int RandIndexPlatform = FMath::RandRange(1,4);
 	for (auto Actor : FoundActors)
 	{

@@ -31,37 +31,32 @@ public:
 
 	virtual void KillCharacter();
 
-	UPROPERTY(BlueprintReadWrite, Transient)
+	UPROPERTY(BlueprintReadWrite)
 	class ASquidGameCharacter* TempCharacter;
 
-	UPROPERTY(BlueprintReadWrite, Transient)
+	UPROPERTY(BlueprintReadWrite)
 	class ASquidGameCharacter* CharacterLeftPosition;
 
-	UPROPERTY(BlueprintReadWrite, Transient)
+	UPROPERTY(BlueprintReadWrite)
 	class ASquidGameCharacter* CharacterRightPosition;
 
-	UPROPERTY(BlueprintReadWrite, Transient)
+	UPROPERTY(BlueprintReadWrite)
 	class AActorLight* ActorLight;
 
-	UPROPERTY(BlueprintReadWrite, Transient)
-	class ATimeManager* TimeManager;
-
-	UPROPERTY(BlueprintReadWrite, Transient)
+	UPROPERTY(BlueprintReadWrite)
 	class AYoungHeeActor* YoungHeeActor;
 
-	UPROPERTY(BlueprintReadWrite, Transient)
+	UPROPERTY(BlueprintReadWrite)
 	class ASquidGameGameState* GameState;
 
-
-
-	/**UPROPERTY(Transient)
+	UPROPERTY(Transient)
 	class ASquidGamePlayerController* TempPlayerController;
 
 	UPROPERTY(Transient)
 	class ASquidGamePlayerController* PlayerController1;
 
 	UPROPERTY(Transient)
-	class ASquidGamePlayerController* PlayerController2;*/
+	class ASquidGamePlayerController* PlayerController2;
 
 	UPROPERTY(Transient)
 	TArray<AActor*> FoundCharacters;

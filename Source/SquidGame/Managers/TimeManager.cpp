@@ -43,6 +43,7 @@ void ATimeManager::TimerToParty()
 
 	if (Timer <= 0 && GameState) 
 	{
+		Timer = 0;
 		GameState->OnEndSceneGame();
 	}
 	

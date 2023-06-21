@@ -15,9 +15,7 @@ ARotatingPost::ARotatingPost()
 	RootComponent = Mesh;
 
 
-	Dimensions = FVector(0, 300, 0);
-	AxisVector = FVector(0, 0, 1);
-	Multiplier = 50.f;
+	
 }
 
 // Called when the game starts or when spawned
@@ -33,43 +31,23 @@ void ARotatingPost::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
 	Rotated();
+
+	Timer -= DeltaTime;
+
 }
 
 void ARotatingPost::Rotated() 
 {
-	FRotator NewRotation = FRotator(0, 0, Multiplier);
+	FRotator NewRotation = FRotator(0, Multiplier, 0);
 
 	FQuat QuatRotation = FQuat(NewRotation);
 
 	Mesh->AddLocalRotation(QuatRotation, false, 0, ETeleportType::None);
-}
 
-void ARotatingPost::RotateAroundOtherActor() 
-{
-	FVector NewLocation = FVector(0, 0, 800);
-
-	FVector Radius = FVector(200, 0, 0);
-
-	AngleAxis++;
-
-	if (AngleAxis >= 360.0f)
+	if (Timer <= 50.f)
 	{
-		AngleAxis = 0;
+		Multiplier = Multiplier * 2;
 	}
-
-	FVector RotateValue = Radius.RotateAngleAxis(AngleAxis, FVector(0, 0, 0));
-
-	NewLocation.X += RotateValue.X;
-	NewLocation.Y += RotateValue.Y;
-	NewLocation.Z += RotateValue.Z;
-
-	SetActorLocation(NewLocation);
-
-	/*FRotator NewRotation = FRotator(0, 0, AngleAxis);
-
-	FQuat QuatRotation = FQuat(NewRotation);
-
-	SetActorLocationAndRotation(NewLocation, QuatRotation, false, 0, ETeleportType::None);*/
 }
+

@@ -31,10 +31,10 @@ public:
 	FVector AxisVector;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
-	float Multiplier;
+	float Multiplier = 0;
 	
-	UPROPERTY(EditInstanceOnly, Category = "Movement")
-	bool bIsRotateOtherActor;
+
+	float Timer = 60.f;
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,9 +42,6 @@ protected:
 
 	void Rotated();
 
-	void RotateAroundOtherActor();
-	
-	
 
 public:	
 	// Called every frame
