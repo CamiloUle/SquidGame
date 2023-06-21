@@ -11,6 +11,8 @@
 #include "Managers/TimeManager.h"
 #include "Engine/GameEngine.h"
 #include "Sound/SoundCue.h"
+#include "Containers/Map.h"
+//#include "Containers/UnrealFunction.h"
 
 // Sets default values
 ADestroyablePlatform::ADestroyablePlatform()
@@ -30,13 +32,25 @@ void ADestroyablePlatform::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	TimeToChangeColor = 1.f;
+
 	SetNumberPlatform();
-
-	GetWorldTimerManager().SetTimer(Delay, this, &ADestroyablePlatform::ChangeNumberPlatform, TimeToChangeColor, true);
-
+	
+	ChangeStatePlatform();
+	
 	Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATimeManager::StaticClass());
 
 	TimeManager = Cast<ATimeManager>(Actor);
+
+	RangeFunctionMap.Add(1, [this]() { OnChangeHighZone(); });
+	RangeFunctionMap.Add(2, [this]() { OnChangeMediumZone(); });
+	RangeFunctionMap.Add(3, [this]() { OnChangeLowZone(); });
+	RangeFunctionMap.Add(4, [this]() { OnChangeLowZone(); });
+	RangeFunctionMap.Add(5, [this]() { OnChangeLowZone(); });
+	RangeFunctionMap.Add(6, [this]() { OnChangeLowZone(); });
+	RangeFunctionMap.Add(7, [this]() { OnChangeLowZone(); });
+	RangeFunctionMap.Add(8, [this]() { OnChangeLowZone(); });
+	RangeFunctionMap.Add(9, [this]() { OnChangeLowZone(); });
 }
 
 //Called every frame
@@ -44,9 +58,10 @@ void ADestroyablePlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	ChangeStatePlatform();
+	
 
 }
+
 void ADestroyablePlatform::SetNumberPlatform()
 {
 	/*if (GEngine)
@@ -59,56 +74,43 @@ void ADestroyablePlatform::SetNumberPlatform()
 
 void ADestroyablePlatform::ChangeNumberPlatform()
 {
-	
+	if (TimeManager != nullptr)
+	{
+		if (TimeManager->Timer <= 20 && TimeManager->Timer >= 10)
+		{
+			TimeToChangeColor = 0.75f;
+		}
+		else if (TimeManager->Timer <= 10)
+		{
+			TimeToChangeColor = 0.5f;
+		}
+	}
 
 	SetActorEnableCollision(true);
 	OnChangeIndexPlatform();
 	
+	TFunction<void()> ChangeZoneFunction = RangeFunctionMap.FindRef(RandomIndex);
+	if (ChangeZoneFunction)
+	{
+		ChangeZoneFunction();
+	}
+	
 	RandomIndex -= 1;
-	
-	FString String = FString::SanitizeFloat(TimeToChangeColor);
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, *String);
-	}
-
-	if (RandomIndex >= 6 && RandomIndex <= 9)
-	{
-		OnChangeLowZone();
-	}
-
-	if (RandomIndex >= 4 && RandomIndex <= 6)
-	{
-		OnChangeMediumZone();
-	}
-
-	if (RandomIndex >= 1 && RandomIndex <= 3)
-	{
-		OnChangeHighZone();
-	}
-	
 	if (RandomIndex <= -1)
 	{
 		Mesh->SetMaterial(0, RedMaterial);
 		SetActorEnableCollision(false);
 		SetNumberPlatform();
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FallCue, GetActorLocation());
+		
 	}
+	
+	GetWorldTimerManager().SetTimer(Delay, this, &ADestroyablePlatform::ChangeNumberPlatform, TimeToChangeColor, false);
 }
 
 void ADestroyablePlatform::ChangeStatePlatform()
 {
-	if (TimeManager != nullptr) 
-	{
-		if (TimeManager->Timer <= 20 && TimeManager->Timer >= 10)
-		{
-			TimeToChangeColor = 0.75f;
-		}
-		else if (TimeManager->Timer <= 10) 
-		{
-			TimeToChangeColor = 0.5f;
-		}
-	}
+	GetWorldTimerManager().SetTimer(Delay, this, &ADestroyablePlatform::ChangeNumberPlatform, TimeToChangeColor, false);
 }
 
 

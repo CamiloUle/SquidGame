@@ -12,6 +12,7 @@ class SQUIDGAME_API ADestroyablePlatform : public AActor
 	GENERATED_BODY()
 	
 public:	
+
 	// Sets default values for this actor's properties
 	ADestroyablePlatform();
 
@@ -25,8 +26,7 @@ public:
 	int32 RandomIndex = 0;
 	
 	UPROPERTY(Transient)
-	float TimeToChangeColor = 1.f;
-
+	float TimeToChangeColor = 0;
 
 	UPROPERTY(Transient)
 	FTimerHandle Delay;
@@ -42,6 +42,9 @@ public:
 
 	UPROPERTY(Transient, EditAnyWhere)
 	class USoundCue* FallCue;
+
+	
+	TMap<int32, TFunction<void()>> RangeFunctionMap;
 
 protected:
 	// Called when the game starts or when spawned
