@@ -24,13 +24,23 @@ public:
 	UPROPERTY(Transient)
 	int32 NumOfHits = 0;
 
+	UPROPERTY(Transient, EditInstanceOnly)
+	int32 BucketID = 0;
+
 	UPROPERTY(Transient)
 	class AEvilPopcorn* EvilPopcorn;
 
 	UPROPERTY(Transient)
 	class APopcorn* Popcorn;
 
+	UPROPERTY(Transient)
+	class ASquidGameCharacter* CharacterLeftPosition;
 
+	UPROPERTY(Transient)
+	class ASquidGameCharacter* CharacterRightPosition;
+
+	UPROPERTY(Transient, EditInstanceOnly)
+	float DistanceToAttach = 20.f;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,5 +48,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void SetNewPosition();
 
 };
