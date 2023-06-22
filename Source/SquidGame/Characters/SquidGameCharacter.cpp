@@ -14,6 +14,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Actors/YoungHeeActor.h"
 #include "General/SquidGameGameState.h"
+#include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Actors/EvilPopcorn.h"
+#include "Actors/Popcorn.h"
+#include "Engine/SkeletalMesh.h"
+#include "Actors/Bucket.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ASquidGameCharacter
@@ -33,7 +40,17 @@ ASquidGameCharacter::ASquidGameCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	//GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
+
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Bucket"));
+	StaticMesh->SetupAttachment(RootComponent);
+
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	BoxComponent->SetupAttachment(StaticMesh);
+
+	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ASquidGameCharacter::OnOverlapBegin);
 }
+
+
 
 void ASquidGameCharacter::BeginPlay()
 {
@@ -71,4 +88,34 @@ void ASquidGameCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 
+}
+
+void ASquidGameCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		EvilPopcorn = Cast<AEvilPopcorn>(OtherActor);
+		Popcorn = Cast<APopcorn>(OtherActor);
+
+		if (Popcorn != nullptr)
+		{
+			NumOfHits += 1;
+
+			FString ValueString = FString::Printf(TEXT("Num of Hits: %d"), NumOfHits);
+
+			FVector2D ScreenPosition(100.0f, 100.0f); // Posición en la pantalla donde se mostrará el mensaje
+			float DisplayTime = 5.0f; // Tiempo en segundos durante el cual se mostrará el mensaje
+
+			FColor TextColor = FColor::Red;
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, DisplayTime, TextColor, ValueString, false);
+			}
+
+		}
+		else if (EvilPopcorn != nullptr)
+		{
+			NumOfHits -= 1;
+		}
+	}
 }

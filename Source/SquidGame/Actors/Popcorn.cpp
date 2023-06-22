@@ -4,6 +4,7 @@
 #include "Actors/Popcorn.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
+#include "Characters/SquidGameCharacter.h"
 
 
 // Sets default values
@@ -14,6 +15,12 @@ APopcorn::APopcorn()
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("BoxComponent"));
 	SphereComponent->SetupAttachment(RootComponent);
+
+}
+
+void APopcorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	
 }
 
 // Called when the game starts or when spawned

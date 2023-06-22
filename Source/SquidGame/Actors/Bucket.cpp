@@ -7,6 +7,7 @@
 #include "Actors/EvilPopcorn.h"
 #include "Actors/Popcorn.h"
 #include "Characters/SquidGameCharacter.h"
+#include "General/SquidGamePlayerController.h"
 
 
 // Sets default values
@@ -31,6 +32,18 @@ void ABucket::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 		if (Popcorn != nullptr) 
 		{
 			NumOfHits += 1;
+
+			FString ValueString = FString::Printf(TEXT("Num of Hits: %d"), NumOfHits);
+
+			FVector2D ScreenPosition(100.0f, 100.0f); // Posición en la pantalla donde se mostrará el mensaje
+			float DisplayTime = 5.0f; // Tiempo en segundos durante el cual se mostrará el mensaje
+
+			FColor TextColor = FColor::Red;
+			if (GEngine) 
+			{
+				GEngine->AddOnScreenDebugMessage(-1, DisplayTime, TextColor, ValueString, false);
+			}
+			
 		}
 		else if (EvilPopcorn != nullptr) 
 		{
@@ -44,24 +57,28 @@ void ABucket::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TArray<AActor*> FoundCharacters;
+	FName SocketName = TEXT("headSocket");
+	FName TagBucket1 = FName("Player1");
+	FName TagBucket2 = FName("Player2");
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASquidGameCharacter::StaticClass(), FoundCharacters);
-
-	for (auto Actor : FoundCharacters) 
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	
+	/*if (PlayerCharacter && PlayerCharacter->GetMesh())
 	{
-		ASquidGameCharacter* TempCharacter = Cast<ASquidGameCharacter>(Actor);
+		if (PlayerCharacter->Tags.Contains(TagBucket1))
+		{
+			AttachToComponent(PlayerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);	
+		}
+		else if (PlayerCharacter->Tags.Contains(TagBucket1)) 
+		{
+			AttachToComponent(PlayerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+		}
+	}*/
 
-		if (TempCharacter->CharacterIndex == 0) 
-		{
-			CharacterLeftPosition = TempCharacter;
-		}
-		else if (TempCharacter->CharacterIndex == 1) 
-		{
-			CharacterRightPosition = TempCharacter;
-		}
-	}
+	SetUpCharacter();
 }
+	
+
 
 // Called every frame
 void ABucket::Tick(float DeltaTime)
@@ -71,30 +88,53 @@ void ABucket::Tick(float DeltaTime)
 	//SetNewPosition();
 }
 
-void ABucket::SetNewPosition()
+void ABucket::SetUpCharacter()
 {
-	//float DistanceToAttach = 20.f;
+	FName TagBucket1 = FName("Player1");
+	FName TagBucket2 = FName("Player2");
+	TArray<AActor*>FoundCharacter;
 
-	if (BucketID == 0 && CharacterLeftPosition)
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASquidGameCharacter::StaticClass(), FoundCharacter);
+
+	ASquidGameCharacter* TempCharacter = nullptr;
+
+	for (auto Actor : FoundCharacter) 
 	{
-		const float DistanceSqrPlayer1 = ((CharacterLeftPosition->GetActorLocation() - GetActorLocation()).SizeSquared2D());
+		TempCharacter = Cast<ASquidGameCharacter>(Actor);
 
-		if (DistanceSqrPlayer1 <= (DistanceToAttach * DistanceToAttach)) 
+		if (TempCharacter->ActorHasTag("Player1")) 
 		{
-			SetActorRelativeLocation((CharacterLeftPosition->GetActorLocation()));
+			CharacterLeftPosition = TempCharacter;
 		}
-	}
-	
-	if(BucketID == 1 && CharacterRightPosition)
-	{
-		const float DistanceSqrPlayer2 = ((CharacterRightPosition->GetActorLocation() - GetActorLocation()).SizeSquared2D());
-
-		if (DistanceSqrPlayer2 <= (DistanceToAttach * DistanceToAttach))
+		else if (TempCharacter->ActorHasTag("Player2"))
 		{
-			SetActorRelativeLocation(CharacterRightPosition->GetActorLocation());
+			CharacterRightPosition = TempCharacter;
 		}
+		
 	}
 
-	
+	AttachBucketToCharacter(0);
 }
+
+void ABucket::AttachBucketToCharacter(int32 PlayerIndex)
+{
+	ASquidGameCharacter* CharacterToAttach = nullptr;
+
+	if (PlayerIndex == 0)
+	{
+		CharacterToAttach = CharacterLeftPosition;
+	}
+	else if (PlayerIndex == 1)
+	{
+		CharacterToAttach = CharacterRightPosition;
+	}
+
+	if (CharacterToAttach)
+	{
+		FName SocketName = TEXT("headSocket");
+		AttachToComponent(CharacterToAttach->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, SocketName);
+	}
+}
+
+
 

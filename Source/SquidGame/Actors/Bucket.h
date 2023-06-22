@@ -49,6 +49,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetNewPosition();
-
+	void SetUpCharacter();
+	void AttachBucketToCharacter(int32 PlayerIndex);
 };

@@ -22,6 +22,12 @@ class ASquidGameCharacter : public ACharacter
 public:
 	ASquidGameCharacter();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
+	class UBoxComponent* BoxComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
+	class UStaticMeshComponent* StaticMesh;
+
 	FVector InputMovement;
 	FVector LastMovementDirection;
 	
@@ -42,6 +48,16 @@ public:
 
 	UPROPERTY()
 	bool bIsJumping = false;
+
+
+	UPROPERTY(Transient)
+	class AEvilPopcorn* EvilPopcorn;
+
+	UPROPERTY(Transient)
+	class APopcorn* Popcorn;
+
+	UPROPERTY(Transient)
+	int32 NumOfHits = 0;
 
 public:
 
@@ -89,5 +105,9 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 };
 
