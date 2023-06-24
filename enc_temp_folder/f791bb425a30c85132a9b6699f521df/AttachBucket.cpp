@@ -98,6 +98,13 @@ void AAttachBucket::SpawnActorSchedule()
 
 	SpawnActor(Popcorn, PopcornToSpawn);
 
+	if (Popcorn)
+	{
+		FVector StartPosition = Popcorn->GetActorLocation();
+
+		StartPosition.Z = 20;
+		DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Green, true, -1, 0, 2);
+	}
 
 	ScheduleActorSpawn();
 }
@@ -117,6 +124,13 @@ void AAttachBucket::SpawnEvilActorSchedule()
 
 	SpawnActor(EvilPopcorn, PopcornToSpawn);
 
-	
+	if (EvilPopcorn)
+	{
+		FVector StartPosition = EvilPopcorn->GetActorLocation();
+
+		StartPosition.Z = 20;
+		DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Red, true, -1, 0, 2);
+	}
+
 	ScheduleEvilActorSpawn();
 }

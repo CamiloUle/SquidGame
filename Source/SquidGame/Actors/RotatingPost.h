@@ -21,6 +21,12 @@ public:
 	UPROPERTY(Transient)
 	class AActorLight* ActorLight;
 
+	UPROPERTY(Transient)
+	class APopcorn* PopCorn;
+
+	UPROPERTY(Transient)
+	class AAttachBucket* Bucket;
+
 	UPROPERTY(EditAnywhere, Category = Movement)
 	float AngleAxis;
 
@@ -42,6 +48,8 @@ protected:
 
 	void Rotated();
 
+	void SpawnDecal();
+	void TimeToSpawnDecal();
 
 public:	
 	// Called every frame

@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
 #include "Characters/SquidGameCharacter.h"
+#include "Components/SceneComponent.h"
 
 
 // Sets default values
@@ -13,9 +14,12 @@ APopcorn::APopcorn()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("BoxComponent"));
-	SphereComponent->SetupAttachment(RootComponent);
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	SceneComponent->SetMobility(EComponentMobility::Static);
+	SetRootComponent(SceneComponent);
 
+	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("BoxComponent"));
+	SphereComponent->SetupAttachment(SceneComponent);
 }
 
 void APopcorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

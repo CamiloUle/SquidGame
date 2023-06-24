@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AttachBucket.generated.h"
 
+
 UCLASS()
 class SQUIDGAME_API AAttachBucket : public AActor
 {
@@ -15,22 +16,6 @@ public:
 	// Sets default values for this actor's properties
 	AAttachBucket();
 
-	UPROPERTY(Transient)
-	class ASquidGameCharacter* CharacterLeftPosition;
-
-	UPROPERTY(Transient)
-	class ASquidGameCharacter* CharacterRightPosition;
-
-
-	UPROPERTY(Transient)
-	class ABucket* BucketLeftPosition;
-
-	UPROPERTY(Transient)
-	class ABucket* BucketRightPosition;
-
-	UPROPERTY(Transient)
-	TArray<AActor*> FoundBuckets;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -39,5 +24,50 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetNewPosition();
+	UFUNCTION(BlueprintCallable)
+	void SpawnActor(AActor* ActorTypeToSpawn, TSubclassOf<AActor>ClassToSpawn);
+	
+	void ScheduleActorSpawn();
+
+	void ScheduleEvilActorSpawn();
+
+private:
+
+	UFUNCTION()
+	void SpawnActorSchedule();
+
+	UFUNCTION()
+	void SpawnEvilActorSchedule();
+
+public: 
+
+	UPROPERTY(EditDefaultsOnly)
+	class UBoxComponent* SpawnBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class TSubclassOf<AActor> PopcornToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class TSubclassOf<AActor> EvilPopCornToSpawn;
+
+	UPROPERTY(Transient)
+	class APopcorn* Popcorn;
+
+	UPROPERTY(Transient)
+	class AEvilPopcorn* EvilPopcorn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ShouldSpawn = true;
+
+	//Timer To spawn
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpawnTime = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RandomSpawnTimeOffset = 0;
+
+private:
+
+	
 };
