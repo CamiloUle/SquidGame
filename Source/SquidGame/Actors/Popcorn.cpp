@@ -6,7 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Characters/SquidGameCharacter.h"
 #include "Components/SceneComponent.h"
-
+#include "Components/PrimitiveComponent.h"
 
 // Sets default values
 APopcorn::APopcorn()
@@ -20,6 +20,8 @@ APopcorn::APopcorn()
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("BoxComponent"));
 	SphereComponent->SetupAttachment(SceneComponent);
+
+	
 }
 
 void APopcorn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -32,6 +34,18 @@ void APopcorn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FVector StartPosition = GetActorLocation();
+
+	StartPosition.Z = 20;
+	DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Green, false, 3, 0, 2);
+
+	UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(GetRootComponent());
+
+	if (PrimitiveComponent)
+	{
+		float NewMass = FMath::RandRange(500, 1000);
+		PrimitiveComponent->SetMassOverrideInKg(NAME_None, NewMass, true);
+	}
 }
 
 // Called every frame

@@ -29,7 +29,8 @@ public:
 	void InputMovementYP2(float Value);
 	void InputJumpXP2();
 	
-	
+	void SetStunStatePlayer1();
+	void SetStunStatePlayer2();
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

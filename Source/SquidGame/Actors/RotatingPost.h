@@ -18,16 +18,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* Mesh;
 
-	UPROPERTY(Transient)
-	class AActorLight* ActorLight;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UBoxComponent* BoxComponent;
 
-	UPROPERTY(Transient)
-	class APopcorn* PopCorn;
 
-	UPROPERTY(Transient)
-	class AAttachBucket* Bucket;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
+	/*UPROPERTY(EditAnywhere, Category = Movement)
 	float AngleAxis;
 
 	UPROPERTY(EditAnywhere, Category = Movement)
@@ -40,7 +35,7 @@ public:
 	float Multiplier = 0;
 	
 
-	float Timer = 60.f;
+	float Timer = 60.f;*/
 
 protected:
 	// Called when the game starts or when spawned
@@ -48,11 +43,13 @@ protected:
 
 	void Rotated();
 
-	void SpawnDecal();
-	void TimeToSpawnDecal();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 
 };

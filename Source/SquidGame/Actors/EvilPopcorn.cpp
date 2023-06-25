@@ -21,6 +21,10 @@ void AEvilPopcorn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FVector StartPosition = GetActorLocation();
+
+	StartPosition.Z = 20;
+	DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Red, false, 3, 0, 2);
 }
 
 // Called every frame

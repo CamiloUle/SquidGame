@@ -27,11 +27,16 @@ void ASquidGamePlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRightPlayer1", this, &ASquidGamePlayerController::InputMovementYP1);
 	InputComponent->BindAction("JumpPlayer1", IE_Pressed, this, &ASquidGamePlayerController::InputJumpXP1);
 	InputComponent->BindAction("JumpPlayer1", IE_Released, this, &ASquidGamePlayerController::InputJumpXP1);
+	InputComponent->BindAction("StunPlayer1", IE_Pressed, this, &ASquidGamePlayerController::SetStunStatePlayer1);
+	InputComponent->BindAction("StunPlayer1", IE_Released, this, &ASquidGamePlayerController::SetStunStatePlayer1);
+
 
 	InputComponent->BindAxis("MoveForwardPlayer2", this, &ASquidGamePlayerController::InputMovementXP2);
 	InputComponent->BindAxis("MoveRightPlayer2", this, &ASquidGamePlayerController::InputMovementYP2);
 	InputComponent->BindAction("JumpPlayer2", IE_Pressed, this, &ASquidGamePlayerController::InputJumpXP2);
 	InputComponent->BindAction("JumpPlayer2", IE_Released, this, &ASquidGamePlayerController::InputJumpXP2);
+	InputComponent->BindAction("StunPlayer2", IE_Pressed, this, &ASquidGamePlayerController::SetStunStatePlayer2);
+	InputComponent->BindAction("StunPlayer2", IE_Released, this, &ASquidGamePlayerController::SetStunStatePlayer2);
 }
 
 void ASquidGamePlayerController::BeginPlay()
@@ -115,6 +120,44 @@ void ASquidGamePlayerController::InputJumpXP2()
 	{
 		CharacterRightPosition->Jump();
 		CharacterRightPosition->bIsJumping = true;
+	}
+}
+
+void ASquidGamePlayerController::SetStunStatePlayer1()
+{
+	if (CharacterLeftPosition) 
+	{
+		if (CharacterLeftPosition->StunCooldown > 0)
+			return;
+
+		 const float DistanceSqr = (CharacterLeftPosition->GetActorLocation() - CharacterRightPosition->GetActorLocation()).SizeSquared2D();
+
+		 if (DistanceSqr <= (CharacterLeftPosition->StunRange * CharacterLeftPosition->StunRange)) 
+		 {
+			 CharacterRightPosition->bIsCharacterAplyStun = true;
+			 CharacterRightPosition->OnSpawnSound();
+
+			 CharacterLeftPosition->StunCooldown = CharacterLeftPosition->SetStunCooldown;
+		 }
+	}
+}
+
+void ASquidGamePlayerController::SetStunStatePlayer2()
+{
+	if (CharacterLeftPosition && CharacterRightPosition)
+	{
+		if (CharacterRightPosition->StunCooldown > 0)
+			return;
+
+		const float DistanceSqr = (CharacterLeftPosition->GetActorLocation() - CharacterRightPosition->GetActorLocation()).SizeSquared2D();
+
+		if (DistanceSqr <= (CharacterRightPosition->StunRange * CharacterRightPosition->StunRange))
+		{
+			CharacterLeftPosition->bIsCharacterAplyStun = true;
+			CharacterLeftPosition->OnSpawnSound();
+
+			CharacterLeftPosition->StunCooldown = CharacterLeftPosition->SetStunCooldown;
+		}
 	}
 }
 

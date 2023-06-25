@@ -12,6 +12,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/BoxComponent.h"
+#include "Components/PrimitiveComponent.h"
 
 // Sets default values
 AAttachBucket::AAttachBucket()
@@ -30,7 +31,11 @@ void AAttachBucket::BeginPlay()
 	Super::BeginPlay();
 	
 	ScheduleActorSpawn();
-	ScheduleEvilActorSpawn();
+	if (NumOfRoundToSpawnActors >= 20) 
+	{
+		ScheduleEvilActorSpawn();
+	}
+	
 }
 
 // Called every frame
@@ -44,15 +49,15 @@ void AAttachBucket::SpawnActor(AActor* ActorTypeToSpawn, TSubclassOf<AActor>Clas
 {
 	int32 RandOfActorsToSpawn = FMath::RandRange(0, 5);
 
-	for (int32 i = 0; i <= RandOfActorsToSpawn; i++)
+	//for (int32 i = 0; i <= RandOfActorsToSpawn; i++)
 	{
 		FBoxSphereBounds BoxBounds = SpawnBox->CalcBounds(GetActorTransform());
 
 		FVector SpawnPosition = BoxBounds.Origin;
 
-		FString VectorToString = BoxBounds.Origin.ToString();
+		/*FString VectorToString = BoxBounds.Origin.ToString();
 		UE_LOG(LogTemp, Log, TEXT("Vector: %s"), *VectorToString);
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, VectorToString, false);
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, VectorToString, false);*/
 
 		SpawnPosition.X += -BoxBounds.BoxExtent.X + 2 * BoxBounds.BoxExtent.X * FMath::FRand();
 		SpawnPosition.Y += -BoxBounds.BoxExtent.Y + 2 * BoxBounds.BoxExtent.Y * FMath::FRand();
@@ -64,27 +69,22 @@ void AAttachBucket::SpawnActor(AActor* ActorTypeToSpawn, TSubclassOf<AActor>Clas
 		SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		ActorTypeToSpawn = GetWorld()->SpawnActor<AActor>(ClassToSpawn, SpawnPosition, FRotator::ZeroRotator, SpawnParam);
+		
+		if (!ActorTypeToSpawn)
+			return;
+			
 
-		if (ActorTypeToSpawn == Popcorn)
-		{
-			FVector StartPosition = ActorTypeToSpawn->GetActorLocation();
+		NumOfRoundToSpawnActors++;
 
-			StartPosition.Z = 20;
-			DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Green, true, -1, 0, 2);
-		}
-		else if (ActorTypeToSpawn == EvilPopcorn)
-		{
-			FVector StartPosition = ActorTypeToSpawn->GetActorLocation();
-
-			StartPosition.Z = 20;
-			DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Red, true, -1, 0, 2);
-		}
+		FString NumString = FString::FromInt(NumOfRoundToSpawnActors);
+		FString DebugMessage = FString::Printf(TEXT("%s"), *NumString);
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, DebugMessage, false);
 	}
 }
 
 void AAttachBucket::ScheduleActorSpawn()
 {
-	float Random = FMath::RandRange(1, 3);
+	float Random = FMath::RandRange(1, 4);
 
 	FTimerHandle TimerHandle;
 
@@ -96,27 +96,36 @@ void AAttachBucket::SpawnActorSchedule()
 {
 	Popcorn = nullptr;
 
-	SpawnActor(Popcorn, PopcornToSpawn);
+	int32 RandOfActorsToSpawn = FMath::RandRange(0, 5);
 
+	for (int32 i = 0; i <= RandOfActorsToSpawn; i++)
+	{
+		SpawnActor(Popcorn, ActorToSpawn);
+		
+	}
 
+	
 	ScheduleActorSpawn();
 }
 
 void AAttachBucket::ScheduleEvilActorSpawn()
 {
-	float Random = FMath::RandRange(1, 3);
+	float Random = FMath::RandRange(4, 8);
 
 	FTimerHandle TimerHandle;
-
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AAttachBucket::SpawnEvilActorSchedule, Random, false);
 }
+	
 
 void AAttachBucket::SpawnEvilActorSchedule()
 {
 	EvilPopcorn = nullptr;
 
-	SpawnActor(EvilPopcorn, PopcornToSpawn);
+	int32 RandOfActorsToSpawn = FMath::RandRange(2, 3);
 
-	
-	ScheduleEvilActorSpawn();
+	for (int32 i = 0; i <= RandOfActorsToSpawn; i++)
+	{
+		SpawnActor(EvilPopcorn, ActorToSpawn);
+		ScheduleEvilActorSpawn();
+	}
 }

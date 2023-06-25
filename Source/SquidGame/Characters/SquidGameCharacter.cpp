@@ -3,24 +3,31 @@
 #include "Characters/SquidGameCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/Controller.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Actors/CharacterCameraActor.h"
-#include "DrawDebugHelpers.h"
-#include "Actors/ActorLight.h"
-#include "Kismet/GameplayStatics.h"
-#include "Actors/YoungHeeActor.h"
-#include "General/SquidGameGameState.h"
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/SpringArmComponent.h"
+
+#include "DrawDebugHelpers.h"
+#include "Actors/ActorLight.h"
+#include "Actors/YoungHeeActor.h"
+#include "Actors/Bucket.h"
 #include "Actors/EvilPopcorn.h"
+#include "Actors/CharacterCameraActor.h"
+
+#include "General/SquidGameGameState.h"
+
 #include "Actors/Popcorn.h"
 #include "Engine/SkeletalMesh.h"
-#include "Actors/Bucket.h"
+
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ASquidGameCharacter
@@ -57,6 +64,15 @@ void ASquidGameCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	RandomCharacterID = FMath::RandRange(1, 500);
+
+	if (bIsSetBucket) 
+	{
+		StaticMesh->SetVisibility(true);
+	}
+	else if (!bIsSetBucket) 
+	{
+		StaticMesh->SetVisibility(false);
+	}
 }
 
 
@@ -64,9 +80,23 @@ void ASquidGameCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	StunCooldown -= DeltaTime;
+
 	if (bIsCharacterDead || bIscharacterOverlapGoal)
 	{
 		RemovePlayerInput();
+	}
+
+	if (bIsCharacterAplyStun) 
+	{
+		RemovePlayerInput();
+		TimeToStun -= DeltaTime;
+
+		if (TimeToStun <= 0) 
+		{
+			bIsCharacterAplyStun = false;
+			TimeToStun = SetTimeToStun;
+		}
 	}
 
 	MovementDirection = FVector(InputMovement.X, InputMovement.Y, InputMovement.Z);
@@ -83,6 +113,7 @@ void ASquidGameCharacter::RemovePlayerInput()
 	InputMovement.X = 0;
 	InputMovement.Y = 0;
 }
+
 void ASquidGameCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -100,6 +131,7 @@ void ASquidGameCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 		if (Popcorn != nullptr)
 		{
 			NumOfHits += 1;
+			Popcorn->Destroy();
 
 			FString ValueString = FString::Printf(TEXT("Num of Hits: %d"), NumOfHits);
 
@@ -116,6 +148,19 @@ void ASquidGameCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 		else if (EvilPopcorn != nullptr)
 		{
 			NumOfHits -= 1;
+			EvilPopcorn->Destroy();
 		}
+	}
+}
+
+void ASquidGameCharacter::PlayStunSound()
+{
+	USoundCue* SoundCue = LoadObject<USoundCue>(nullptr, TEXT("/Game/Content/Media/Sounds/Uh.SoundCue"));
+
+	if (SoundCue)
+	{
+		FVector SoundLocation = GetActorLocation(); 
+
+		UGameplayStatics::PlaySoundAtLocation(this, SoundCue, SoundLocation);
 	}
 }

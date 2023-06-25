@@ -45,10 +45,7 @@ public:
 	class UBoxComponent* SpawnBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class TSubclassOf<AActor> PopcornToSpawn;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class TSubclassOf<AActor> EvilPopCornToSpawn;
+	class TSubclassOf<AActor> ActorToSpawn;
 
 	UPROPERTY(Transient)
 	class APopcorn* Popcorn;
@@ -66,6 +63,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RandomSpawnTimeOffset = 0;
+
+	UPROPERTY(Transient)
+	int32 NumOfRoundToSpawnActors = 0;
 
 private:
 
