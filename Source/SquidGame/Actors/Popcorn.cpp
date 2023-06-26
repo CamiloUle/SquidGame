@@ -14,12 +14,12 @@ APopcorn::APopcorn()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	/*SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	SceneComponent->SetMobility(EComponentMobility::Static);
-	SetRootComponent(SceneComponent);
+	SetRootComponent(SceneComponent);*/
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("BoxComponent"));
-	SphereComponent->SetupAttachment(SceneComponent);
+	SphereComponent->SetupAttachment(RootComponent);
 
 	
 }
@@ -39,13 +39,18 @@ void APopcorn::BeginPlay()
 	StartPosition.Z = 20;
 	DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Green, false, 3, 0, 2);
 
-	UPrimitiveComponent* PrimitiveComponent = Cast<UPrimitiveComponent>(GetRootComponent());
+	MovementDirection = GetActorUpVector();
 
-	if (PrimitiveComponent)
-	{
-		float NewMass = FMath::RandRange(500, 1000);
-		PrimitiveComponent->SetMassOverrideInKg(NAME_None, NewMass, true);
-	}
+	RangeFunctionMap.Add(1, 1000.f);
+	RangeFunctionMap.Add(2, 1200.f);
+	RangeFunctionMap.Add(3, 1400.f);
+	RangeFunctionMap.Add(4, 1600.f);
+	RangeFunctionMap.Add(5, 1800.f);
+	RangeFunctionMap.Add(6, 2000.f);
+
+	float RandomSpeed = FMath::RandRange(1, 6);
+
+	Speed = RangeFunctionMap.FindRef(RandomSpeed);
 }
 
 // Called every frame
@@ -53,5 +58,6 @@ void APopcorn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SetActorLocation(GetActorLocation() + -MovementDirection * Speed * DeltaTime);
 }
 

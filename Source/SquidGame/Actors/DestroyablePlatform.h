@@ -43,7 +43,6 @@ public:
 	UPROPERTY(Transient, EditAnyWhere)
 	class USoundCue* FallCue;
 
-	
 	TMap<int32, TFunction<void()>> RangeFunctionMap;
 
 protected:

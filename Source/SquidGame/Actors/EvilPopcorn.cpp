@@ -25,6 +25,18 @@ void AEvilPopcorn::BeginPlay()
 
 	StartPosition.Z = 20;
 	DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Red, false, 3, 0, 2);
+
+
+	MovementDirection = GetActorUpVector();
+
+	RangeFunctionMap.Add(1, 1300.f);
+	RangeFunctionMap.Add(2, 1600.f);
+	RangeFunctionMap.Add(3, 1900.f);
+	
+
+	float RandomSpeed = FMath::RandRange(1, 3);
+
+	Speed = RangeFunctionMap.FindRef(RandomSpeed);
 }
 
 // Called every frame
@@ -32,5 +44,6 @@ void AEvilPopcorn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SetActorLocation(GetActorLocation() + -MovementDirection * Speed * DeltaTime);
 }
 

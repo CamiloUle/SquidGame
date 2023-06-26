@@ -29,4 +29,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	FVector MovementDirection;
+
+	float Speed = 1000.f;
+
+	TMap<int32, float> RangeFunctionMap;
 };
