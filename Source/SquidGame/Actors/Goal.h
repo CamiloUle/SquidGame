@@ -28,6 +28,9 @@ public:
 	bool bIsWantKillCharacter = false;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	bool bIsSetNewPosition = false;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 	bool bIsWantWonCharacter = false;
 
 	UPROPERTY(Transient)

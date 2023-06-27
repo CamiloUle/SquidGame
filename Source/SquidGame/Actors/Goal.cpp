@@ -11,7 +11,6 @@
 #include "General/SquidGamePlayerController.h"
 
 #include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGoal::AGoal()
@@ -36,22 +35,6 @@ void AGoal::BeginPlay()
 
 	PlayerController = Cast<ASquidGamePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
-	for (auto Actor : FoundCharacters)
-	{
-		Character = Cast<ASquidGameCharacter>(Actor);
-
-		if (Character)
-		{
-			if (Character->CharacterIndex == 0)
-			{
-				CharacterLeftPosition = Character;
-			}
-			else if (Character->CharacterIndex == 1)
-			{
-				CharacterRightPosition = Character;
-			}
-		}
-	}
 }
 
 // Called every frame
@@ -101,7 +84,7 @@ void AGoal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AAct
 				}
 			}
 
-			else if (bIsWantKillCharacter)
+			if (bIsWantKillCharacter)
 			{
 				OverlapGoalCounter++;
 
@@ -116,8 +99,18 @@ void AGoal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AAct
 					Character->bIscharacterOverlapGoal = true;
 				}
 			}
-		}
 
-		
+			if (bIsSetNewPosition)
+			{
+				if (Character->CharacterIndex == 0)
+				{
+					Character->SetActorLocation(Character->SpawnLocation);
+				}
+				else if (Character->CharacterIndex == 1)
+				{
+					Character->SetActorLocation(Character->SpawnLocation);
+				}
+			}
+		}
 	}
 } 

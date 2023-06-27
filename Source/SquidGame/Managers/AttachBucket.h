@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class TSubclassOf<AActor> ActorToSpawn;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class TSubclassOf<AActor> EvilActorSpawn;
+
 	UPROPERTY(Transient)
 	class APopcorn* Popcorn;
 

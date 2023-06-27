@@ -52,6 +52,10 @@ void ARotatingPost::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 		}
 		if (EvilPopcorn) 
 		{
+			SpawnLocation = EvilPopcorn->GetActorLocation();
+
+			SpawnLocation.Z = 1;
+			OnSpawnEmitter();
 			EvilPopcorn->Destroy();
 		}
 	}

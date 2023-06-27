@@ -31,10 +31,10 @@ void AAttachBucket::BeginPlay()
 	Super::BeginPlay();
 	
 	ScheduleActorSpawn();
-	if (NumOfRoundToSpawnActors >= 20) 
-	{
-		ScheduleEvilActorSpawn();
-	}
+	
+	
+	ScheduleEvilActorSpawn();
+	
 	
 }
 
@@ -72,13 +72,6 @@ void AAttachBucket::SpawnActor(AActor* ActorTypeToSpawn, TSubclassOf<AActor>Clas
 		
 		if (!ActorTypeToSpawn)
 			return;
-			
-
-		NumOfRoundToSpawnActors++;
-
-		FString NumString = FString::FromInt(NumOfRoundToSpawnActors);
-		FString DebugMessage = FString::Printf(TEXT("%s"), *NumString);
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, DebugMessage, false);
 	}
 }
 
@@ -96,7 +89,7 @@ void AAttachBucket::SpawnActorSchedule()
 {
 	Popcorn = nullptr;
 
-	int32 RandOfActorsToSpawn = FMath::RandRange(0, 5);
+	int32 RandOfActorsToSpawn = FMath::RandRange(3, 6);
 
 	for (int32 i = 0; i <= RandOfActorsToSpawn; i++)
 	{
@@ -104,13 +97,12 @@ void AAttachBucket::SpawnActorSchedule()
 		
 	}
 
-	
 	ScheduleActorSpawn();
 }
 
 void AAttachBucket::ScheduleEvilActorSpawn()
 {
-	float Random = FMath::RandRange(4, 8);
+	float Random = FMath::RandRange(4, 6);
 
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AAttachBucket::SpawnEvilActorSchedule, Random, false);
@@ -121,11 +113,12 @@ void AAttachBucket::SpawnEvilActorSchedule()
 {
 	EvilPopcorn = nullptr;
 
-	int32 RandOfActorsToSpawn = FMath::RandRange(2, 3);
+	int32 RandOfActorsToSpawn = FMath::RandRange(2, 4);
 
 	for (int32 i = 0; i <= RandOfActorsToSpawn; i++)
 	{
-		SpawnActor(EvilPopcorn, ActorToSpawn);
-		ScheduleEvilActorSpawn();
+		SpawnActor(EvilPopcorn, EvilActorSpawn);
+		
 	}
+	ScheduleEvilActorSpawn();
 }

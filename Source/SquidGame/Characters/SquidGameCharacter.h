@@ -32,7 +32,8 @@ public:
 
 	FVector InputMovement;
 	FVector LastMovementDirection;
-	
+	FVector SpawnLocation; 
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FVector MovementDirection;
 
@@ -42,7 +43,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 RandomCharacterID = 0;
 	
-	UPROPERTY(Transient)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 NumOfHits = 0;
 
 	UPROPERTY(Transient)
@@ -135,6 +136,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnCrossGoal();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnWidgetCounter();
 
 	UFUNCTION()
 	void RemovePlayerInput();

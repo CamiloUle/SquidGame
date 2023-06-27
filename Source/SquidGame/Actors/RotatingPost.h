@@ -21,6 +21,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UBoxComponent* BoxComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FVector SpawnLocation;
+
+	
 
 	/*UPROPERTY(EditAnywhere, Category = Movement)
 	float AngleAxis;
@@ -51,5 +55,6 @@ public:
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpawnEmitter();
 };

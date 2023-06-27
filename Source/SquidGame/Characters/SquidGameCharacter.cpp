@@ -20,6 +20,7 @@
 #include "Actors/Bucket.h"
 #include "Actors/EvilPopcorn.h"
 #include "Actors/CharacterCameraActor.h"
+#include "Actors/KillZone.h"
 
 #include "General/SquidGameGameState.h"
 
@@ -63,6 +64,8 @@ void ASquidGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SpawnLocation = GetActorLocation();
+
 	RandomCharacterID = FMath::RandRange(1, 500);
 
 	if (bIsSetBucket) 
@@ -73,6 +76,8 @@ void ASquidGameCharacter::BeginPlay()
 	{
 		StaticMesh->SetVisibility(false);
 	}
+
+	OnWidgetCounter();
 }
 
 
@@ -105,6 +110,8 @@ void ASquidGameCharacter::Tick(float DeltaTime)
 	{
 		LastMovementDirection = MovementDirection;
 	}
+
+	
 }
 
 void ASquidGameCharacter::RemovePlayerInput()
@@ -135,8 +142,8 @@ void ASquidGameCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 
 			FString ValueString = FString::Printf(TEXT("Num of Hits: %d"), NumOfHits);
 
-			FVector2D ScreenPosition(100.0f, 100.0f); // Posición en la pantalla donde se mostrará el mensaje
-			float DisplayTime = 5.0f; // Tiempo en segundos durante el cual se mostrará el mensaje
+			FVector2D ScreenPosition(100.0f, 100.0f); 
+			float DisplayTime = 5.0f; 
 
 			FColor TextColor = FColor::Red;
 			if (GEngine)
@@ -149,6 +156,13 @@ void ASquidGameCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 		{
 			NumOfHits -= 1;
 			EvilPopcorn->Destroy();
+
+			bIsCharacterAplyStun = true;
+			OnSpawnSound();
+		}
+		else 
+		{
+			bIsCharacterAplyStun = false;
 		}
 	}
 }

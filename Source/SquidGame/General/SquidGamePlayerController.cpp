@@ -156,18 +156,7 @@ void ASquidGamePlayerController::SetStunStatePlayer2()
 			CharacterLeftPosition->bIsCharacterAplyStun = true;
 			CharacterLeftPosition->OnSpawnSound();
 
-			CharacterLeftPosition->StunCooldown = CharacterLeftPosition->SetStunCooldown;
+			CharacterRightPosition->StunCooldown = CharacterRightPosition->SetStunCooldown;
 		}
 	}
 }
-
-
-
-
-	
-
-
-
-
-
-
