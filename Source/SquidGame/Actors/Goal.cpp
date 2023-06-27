@@ -33,6 +33,25 @@ void AGoal::BeginPlay()
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASquidGameCharacter::StaticClass(), FoundCharacters);
 
+	for (auto Actor : FoundCharacters) 
+	{
+		//ASquidGameCharacter* TempCharacter = Cast<ASquidGameCharacter>(Actor);
+
+		Character = Cast<ASquidGameCharacter>(Actor);
+
+		if (Character)
+		{
+			if (Character->CharacterIndex == 0)
+			{
+				CharacterLeftPosition = Character;
+			}
+			else if (Character->CharacterIndex == 1)
+			{
+				CharacterRightPosition = Character;
+			}
+		}
+	}
+
 	PlayerController = Cast<ASquidGamePlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
 }
@@ -51,6 +70,11 @@ void AGoal::Tick(float DeltaTime)
 
 		if ((OverlapGoalCounter == 1 && CharacterRightPosition->bIsCharacterDead)
 			|| (OverlapGoalCounter == 1 && CharacterLeftPosition->bIsCharacterDead))
+		{
+			GameState->OnEndSceneGame();
+		}
+
+		if (CounterLifeplayer1 <= 0 || CounterLifeplayer2 <= 0) 
 		{
 			GameState->OnEndSceneGame();
 		}
@@ -105,10 +129,12 @@ void AGoal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AAct
 				if (Character->CharacterIndex == 0)
 				{
 					Character->SetActorLocation(Character->SpawnLocation);
+					CounterLifeplayer1 -= 1;
 				}
 				else if (Character->CharacterIndex == 1)
 				{
 					Character->SetActorLocation(Character->SpawnLocation);
+					CounterLifeplayer2 -= 1;
 				}
 			}
 		}

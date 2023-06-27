@@ -76,14 +76,19 @@ void ADestroyablePlatform::ChangeNumberPlatform()
 {
 	if (TimeManager != nullptr)
 	{
-		if (TimeManager->Timer <= 20 && TimeManager->Timer >= 10)
+		if (TimeManager->Timer <= 45 && TimeManager->Timer >= 30)
 		{
-			TimeToChangeColor = 0.75f;
+			TimeToChangeColor = 0.8f;
 		}
-		else if (TimeManager->Timer <= 10)
+		else if (TimeManager->Timer <= 30 && TimeManager->Timer >= 10)
 		{
-			TimeToChangeColor = 0.5f;
+			TimeToChangeColor = 0.6f;
 		}
+		else if (TimeManager->Timer <= 10) 
+		{
+			TimeToChangeColor = 0.4f;
+		}
+
 	}
 
 	SetActorEnableCollision(true);
@@ -98,10 +103,15 @@ void ADestroyablePlatform::ChangeNumberPlatform()
 	RandomIndex -= 1;
 	if (RandomIndex <= -1)
 	{
+		//SetTimerToChangeMaterial();
+		
+		TimeToChangeColor = 1.5;
+
 		Mesh->SetMaterial(0, RedMaterial);
 		SetActorEnableCollision(false);
 		SetNumberPlatform();
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FallCue, GetActorLocation());
+
 		
 	}
 	
@@ -111,6 +121,20 @@ void ADestroyablePlatform::ChangeNumberPlatform()
 void ADestroyablePlatform::ChangeStatePlatform()
 {
 	GetWorldTimerManager().SetTimer(Delay, this, &ADestroyablePlatform::ChangeNumberPlatform, TimeToChangeColor, false);
+}
+
+void ADestroyablePlatform::ChageMaterialPlatoform()
+{
+	
+	
+}
+
+void ADestroyablePlatform::SetTimerToChangeMaterial()
+{
+	FTimerHandle TimerHandle;
+	float Timer = 1.2f;
+	RandomIndex = 0;
+	GetWorldTimerManager().SetTimer(TimerHandle,this, &ADestroyablePlatform::ChageMaterialPlatoform, Timer, true);
 }
 
 

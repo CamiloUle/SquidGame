@@ -52,6 +52,8 @@ protected:
 	virtual void SetNumberPlatform();
 	virtual void ChangeNumberPlatform();
 	virtual void ChangeStatePlatform();
+	virtual void ChageMaterialPlatoform();
+	virtual void SetTimerToChangeMaterial();
 
 public:	
 	// Called every frame

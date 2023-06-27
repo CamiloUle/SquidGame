@@ -59,9 +59,9 @@ void AAttachBucket::SpawnActor(AActor* ActorTypeToSpawn, TSubclassOf<AActor>Clas
 		UE_LOG(LogTemp, Log, TEXT("Vector: %s"), *VectorToString);
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, VectorToString, false);*/
 
-		SpawnPosition.X += -BoxBounds.BoxExtent.X + 2 * BoxBounds.BoxExtent.X * FMath::FRand();
-		SpawnPosition.Y += -BoxBounds.BoxExtent.Y + 2 * BoxBounds.BoxExtent.Y * FMath::FRand();
-		SpawnPosition.Z += -BoxBounds.BoxExtent.Z + 2 * BoxBounds.BoxExtent.Z * FMath::FRand();
+		SpawnPosition.X += -BoxBounds.BoxExtent.X + 3 * BoxBounds.BoxExtent.X * FMath::FRand();
+		SpawnPosition.Y += -BoxBounds.BoxExtent.Y + 3 * BoxBounds.BoxExtent.Y * FMath::FRand();
+		SpawnPosition.Z += -BoxBounds.BoxExtent.Z + 3 * BoxBounds.BoxExtent.Z * FMath::FRand();
 
 		FActorSpawnParameters SpawnParam;
 		SpawnParam.Owner = this;
@@ -77,11 +77,11 @@ void AAttachBucket::SpawnActor(AActor* ActorTypeToSpawn, TSubclassOf<AActor>Clas
 
 void AAttachBucket::ScheduleActorSpawn()
 {
-	float Random = FMath::RandRange(1, 4);
+	float RandomTimeToSpawnActor = FMath::RandRange(1, 4);
 
 	FTimerHandle TimerHandle;
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AAttachBucket::SpawnActorSchedule, Random, false);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AAttachBucket::SpawnActorSchedule, RandomTimeToSpawnActor, false);
 }
 
 
@@ -102,10 +102,10 @@ void AAttachBucket::SpawnActorSchedule()
 
 void AAttachBucket::ScheduleEvilActorSpawn()
 {
-	float Random = FMath::RandRange(4, 6);
+	float RandomTimeToSpawnActor = FMath::RandRange(4, 6);
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AAttachBucket::SpawnEvilActorSchedule, Random, false);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AAttachBucket::SpawnEvilActorSchedule, RandomTimeToSpawnActor, false);
 }
 	
 
@@ -113,7 +113,7 @@ void AAttachBucket::SpawnEvilActorSchedule()
 {
 	EvilPopcorn = nullptr;
 
-	int32 RandOfActorsToSpawn = FMath::RandRange(2, 4);
+	int32 RandOfActorsToSpawn = FMath::RandRange(3, 5);
 
 	for (int32 i = 0; i <= RandOfActorsToSpawn; i++)
 	{
