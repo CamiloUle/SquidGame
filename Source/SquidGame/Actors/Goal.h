@@ -51,11 +51,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class ASquidGameCharacter* CharacterRightPosition;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		int32 CounterLifeplayer1 = 3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class ATimeManager* TimeManager;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		int32 CounterLifeplayer2 = 3;
+	int32 CounterLifeplayer1 = 3;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 CounterLifeplayer2 = 3;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

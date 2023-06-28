@@ -9,6 +9,7 @@
 #include "Engine/Engine.h"
 #include "General/SquidGameGameState.h"
 #include "General/SquidGamePlayerController.h"
+#include "Managers/TimeManager.h"
 
 #include "Engine/World.h"
 
@@ -30,6 +31,11 @@ void AGoal::BeginPlay()
 	Super::BeginPlay();
 
 	GameState = GetWorld()->GetGameState<ASquidGameGameState>();
+
+	TimeManager = Cast<ATimeManager>(UGameplayStatics::GetActorOfClass(GetWorld(), ATimeManager::StaticClass()));
+
+	if (!TimeManager)
+		return;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASquidGameCharacter::StaticClass(), FoundCharacters);
 
@@ -66,6 +72,7 @@ void AGoal::Tick(float DeltaTime)
 		if (OverlapGoalCounter >= 2)
 		{
 			GameState->OnEndSceneGame();
+			TimeManager->Timer = 0;
 		}
 
 		if ((OverlapGoalCounter == 1 && CharacterRightPosition->bIsCharacterDead)
@@ -77,6 +84,7 @@ void AGoal::Tick(float DeltaTime)
 		if (CounterLifeplayer1 <= 0 || CounterLifeplayer2 <= 0) 
 		{
 			GameState->OnEndSceneGame();
+			TimeManager->Timer = 0;
 		}
 	}	
 }
@@ -129,11 +137,13 @@ void AGoal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AAct
 				if (Character->CharacterIndex == 0)
 				{
 					Character->SetActorLocation(Character->SpawnLocation);
+					Character->CharacterLife -= 1;
 					CounterLifeplayer1 -= 1;
 				}
 				else if (Character->CharacterIndex == 1)
 				{
 					Character->SetActorLocation(Character->SpawnLocation);
+					Character->CharacterLife -= 1;
 					CounterLifeplayer2 -= 1;
 				}
 			}

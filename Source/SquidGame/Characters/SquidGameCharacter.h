@@ -46,6 +46,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 NumOfHits = 0;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 CharacterLife = 3;
+
 	UPROPERTY(Transient)
 	bool bIsCharacterDead = false;
 	
@@ -61,6 +64,12 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 	bool bIsSetBucket = false;
 	
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	bool bIsActivateWidgetLife = false;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	bool bIsActivateCounterWidget = false;
+
 	UPROPERTY(Transient)
 	float StunCooldown = 1.0f;
 
@@ -139,6 +148,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnWidgetCounter();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnWidgetPlayerLife();
 
 	UFUNCTION()
 	void RemovePlayerInput();

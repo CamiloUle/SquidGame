@@ -77,7 +77,15 @@ void ASquidGameCharacter::BeginPlay()
 		StaticMesh->SetVisibility(false);
 	}
 
-	OnWidgetCounter();
+	if (bIsActivateCounterWidget) 
+	{
+		OnWidgetCounter();
+	}
+	
+	if (bIsActivateWidgetLife) 
+	{
+		OnWidgetPlayerLife();
+	}
 }
 
 
@@ -148,14 +156,18 @@ void ASquidGameCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 			FColor TextColor = FColor::Red;
 			if (GEngine)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, DisplayTime, TextColor, ValueString, false);
+				//GEngine->AddOnScreenDebugMessage(-1, DisplayTime, TextColor, ValueString, false);
 			}
-
 		}
 		else if (EvilPopcorn != nullptr)
 		{
 			NumOfHits -= 1;
 			EvilPopcorn->Destroy();
+
+			if (NumOfHits < 0) 
+			{
+				NumOfHits = 0;
+			}
 
 			bIsCharacterAplyStun = true;
 			OnSpawnSound();
@@ -174,7 +186,6 @@ void ASquidGameCharacter::PlayStunSound()
 	if (SoundCue)
 	{
 		FVector SoundLocation = GetActorLocation(); 
-
 		UGameplayStatics::PlaySoundAtLocation(this, SoundCue, SoundLocation);
 	}
 }

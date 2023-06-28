@@ -46,9 +46,6 @@ void ATimeManager::TimerToParty()
 		Timer = 0;
 		GameState->OnEndSceneGame();
 	}
-	
-	
-	
 }
 
 // Called every frame

@@ -24,7 +24,7 @@ void AEvilPopcorn::BeginPlay()
 	FVector StartPosition = GetActorLocation();
 
 	StartPosition.Z = 20;
-	DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Red, false, 3, 0, 2);
+	DrawDebugSphere(GetWorld(), StartPosition, 25, 10, FColor::Red, false, 2, 0, 2);
 
 
 	MovementDirection = GetActorUpVector();

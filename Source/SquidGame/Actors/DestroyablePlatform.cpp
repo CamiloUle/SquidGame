@@ -88,7 +88,6 @@ void ADestroyablePlatform::ChangeNumberPlatform()
 		{
 			TimeToChangeColor = 0.4f;
 		}
-
 	}
 
 	SetActorEnableCollision(true);
@@ -111,8 +110,6 @@ void ADestroyablePlatform::ChangeNumberPlatform()
 		SetActorEnableCollision(false);
 		SetNumberPlatform();
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FallCue, GetActorLocation());
-
-		
 	}
 	
 	GetWorldTimerManager().SetTimer(Delay, this, &ADestroyablePlatform::ChangeNumberPlatform, TimeToChangeColor, false);
