@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class ASquidGameCharacter* CharacterRightPosition;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class ASquidGameCharacter* CharacterControlled;
+
 	UPROPERTY(Transient)
 	TArray<AActor* > FoundCharacters;
 

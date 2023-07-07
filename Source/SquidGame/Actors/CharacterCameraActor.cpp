@@ -21,29 +21,10 @@ void ACharacterCameraActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASquidGameCharacter::StaticClass(), FoundCharacters);
-
 	if (bIsStaticCameraMode) 
 	{
 		FVector CamerLocation = GetActorLocation();
 		SetActorLocation(CamerLocation);
-	}
-
-	for (auto Actor : FoundCharacters)
-	{
-		SquidGameCharacter = Cast<ASquidGameCharacter>(Actor);
-
-		if (SquidGameCharacter)
-		{
-			if (SquidGameCharacter->CharacterIndex == 0)
-			{
-				CharacterLeftPosition = SquidGameCharacter;
-			}
-			else if (SquidGameCharacter->CharacterIndex == 1)
-			{
-				CharacterRightPosition = SquidGameCharacter;
-			}
-		}
 	}
 }
 
@@ -51,40 +32,42 @@ void ACharacterCameraActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if (!bIsStaticCameraMode) 
+	if (!bIsStaticCameraMode)
+	{	
+		SetCameraLocation();	
+	}
+}
+
+void ACharacterCameraActor::SetPlayerCharacters()
+{
+	
+}
+
+void ACharacterCameraActor::SetCameraLocation()
+{
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASquidGameCharacter::StaticClass(), FoundCharacters);
+
+	ASquidGameCharacter* CharacterFocused = NULL;
+	float MaxDistance = -99999999999.f;
+
+	for (auto Actor : FoundCharacters)
 	{
-		FVector NewCameraLocation = GetActorLocation();
+		SquidGameCharacter = Cast<ASquidGameCharacter>(Actor);
 
-		ASquidGameCharacter* ClosestCharacter = NULL;
+		if (SquidGameCharacter && SquidGameCharacter->GetActorLocation().X > MaxDistance)
+		{
+			MaxDistance = SquidGameCharacter->GetActorLocation().X;
 
-		if (CharacterLeftPosition->GetActorLocation().X < CharacterRightPosition->GetActorLocation().X)
-		{
-			ClosestCharacter = CharacterLeftPosition;
-		}
-		else
-		{
-			ClosestCharacter = CharacterRightPosition;
-		}
-
-		if (ClosestCharacter)
-		{
-			NewCameraLocation.X = ClosestCharacter->GetActorLocation().X - XGap;
-			SetActorLocation(NewCameraLocation);
-		}
-
-		if (CharacterLeftPosition->bIsCharacterDead)
-		{
-			ClosestCharacter = CharacterRightPosition;
-		}
-		else if (CharacterRightPosition->bIsCharacterDead)
-		{
-			ClosestCharacter = CharacterLeftPosition;
-		}
-
-		if (ClosestCharacter)
-		{
-			NewCameraLocation.X = ClosestCharacter->GetActorLocation().X - XGap;
-			SetActorLocation(NewCameraLocation);
+			CharacterFocused = SquidGameCharacter;
 		}
 	}
+
+	if (CharacterFocused)
+	{
+		FVector NewCameraLocation = GetActorLocation();
+		NewCameraLocation.X = CharacterFocused->GetActorLocation().X - XGap;
+
+		SetActorLocation(NewCameraLocation);
+	}
+
 }

@@ -48,5 +48,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class ASquidGameCharacter* CharacterRightPosition;
 
-	
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerCharacters();
+
+	void SetCameraLocation();
 };

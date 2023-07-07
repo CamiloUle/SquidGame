@@ -77,7 +77,7 @@ void AChangeColorManager::Tick(float DeltaTime)
 			ActorLight->OnChangeRedColor();
 			YoungHeeActor->OnRotationActorRight();
 
-			KillCharacter();
+			//KillCharacter();
 		}
 	}
 }
